@@ -1,0 +1,27 @@
+header {
+  width: 100vw;
+  height: 5rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header-content {
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-button-section {
+  display: flex;
+  gap: 1rem;
+}
+
+.header-button {
+  background-color: #f4e041;
+  border: none;
+  border-radius: 25px;
+  padding: 0.75rem 1.5rem;
+}
