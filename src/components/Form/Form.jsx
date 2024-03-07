@@ -8,15 +8,28 @@ const Form = () => {
       <input placeholder="Email" type="email" />
       <input placeholder="Phone" type="text" />
       <p>+38 (XXX) XXX - XX - XX</p>
-      <label>Select your position</label>
-      <input type="radio" name="frontend" />
-      <label for="frontend">Frontend developer</label>
-      <input type="radio" name="backend" />
-      <label for="backend">Backend developer</label>
-      <input type="radio" name="designer" />
-      <label for="designer">Designer</label>
-      <input type="radio" name="qa" />
-      <label for="qa">QA</label>
+      <div className="position-select">
+        <label className="radio-title">Select your position</label>
+
+        <div className="radio-group">
+          <input id="frontend" type="radio" name="position" />
+          <label htmlFor="frontend">Frontend developer</label>
+        </div>
+        <div className="radio-group">
+          <input id="backend" type="radio" name="position" />
+          <label htmlFor="backend">Backend developer</label>
+        </div>
+        <div className="radio-group">
+          <input id="designer" type="radio" name="position" />
+          <label htmlFor="designer">Designer</label>
+        </div>
+        <div className="radio-group">
+          <input id="qa" type="radio" name="position" />
+          <label htmlFor="qa">QA</label>
+        </div>
+      </div>
+      <input type="file" />
+      <button className="button">Save</button>
     </form>
   );
 };
