@@ -36,3 +36,19 @@ input {
 .radio-title {
   margin-bottom: 2rem;
 }
+
+.custom-file-upload {
+  border: none;
+  padding: 1rem;
+}
+
+.input-file {
+  padding: 1.1rem;
+  border: none;
+}
+
+.button-section {
+  display: flex;
+  justify-content: center; /* Центрируем содержимое по горизонтали */
+  width: 100%; /* Задаем ширину контейнера */
+}

@@ -6,7 +6,9 @@ const AddUserComponent = () => {
   return (
     <section>
       <h2>Working with POST request</h2>
-      <Form />
+      <div className="form-wrapper">
+        <Form />
+      </div>
     </section>
   );
 };

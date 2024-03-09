@@ -8,8 +8,8 @@ const Header = () => {
       <div className="header-content">
         <img src={logo} />
         <div className="header-button-section">
-          <button className="header-button">Users</button>
-          <button className="header-button">Sign up</button>
+          <button className="button">Users</button>
+          <button className="button">Sign up</button>
         </div>
       </div>
     </header>
