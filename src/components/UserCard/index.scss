@@ -5,10 +5,6 @@
   border-radius: 15px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 50px; /* Добавляем немного отступа между карточками */
-
-  @media screen and (max-width: 64rem) {
-    width: 10rem; // изменить ширину на 100% на маленьких экранах
-  }
 }
 
 .card {
