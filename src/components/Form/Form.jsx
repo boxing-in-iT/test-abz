@@ -21,11 +21,22 @@ const Form = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
+    let errorMessage = "";
+
+    if (name === "phone") {
+      const phonePattern = /^[\+]{0,1}380([0-9]{9})$/;
+      if (!phonePattern.test(value)) {
+        errorMessage =
+          "Phone number must start with +380 and contain 9 digits.";
+      }
+    }
+
     setFormData({
       ...formData,
       [name]: value,
     });
-    setServerError(null);
+
+    setServerError(errorMessage);
   };
 
   const handleFileChange = (event) => {
@@ -134,74 +145,76 @@ const Form = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      {serverError && <div className="server-error">{serverError}</div>}
+    <div className="form-container">
+      <form onSubmit={handleSubmit}>
+        {serverError && <div className="server-error">{serverError}</div>}
 
-      <input
-        placeholder="Your name"
-        type="text"
-        name="name"
-        value={formData.name}
-        onChange={handleInputChange}
-      />
-      <input
-        placeholder="Email"
-        type="email"
-        name="email"
-        value={formData.email}
-        onChange={handleInputChange}
-      />
-      <input
-        placeholder="Phone"
-        type="text"
-        name="phone"
-        value={formData.phone}
-        onChange={handleInputChange}
-      />
-      <div className="position-select">
-        <label className="radio-title">Select your position</label>
-
-        {positions.map((pos, index) => (
-          <div key={index} className="radio-group">
-            <input
-              id={pos.id}
-              type="radio"
-              name="position"
-              value={pos.id}
-              onChange={handleInputChange}
-            />
-            <label htmlFor={pos.id}>{pos.name}</label>
-          </div>
-        ))}
-      </div>
-      <div>
-        <label htmlFor="file-upload" className="custom-file-upload">
-          Upload
-        </label>
         <input
-          id="file-upload"
-          type="file"
-          onChange={handleFileChange}
-          style={{ display: "none" }}
-        />
-        <input
+          placeholder="Your name"
           type="text"
-          readOnly
-          value={selectedFile ? selectedFile.name : ""}
-          placeholder="Upload your photo"
-          className="input-file"
+          name="name"
+          value={formData.name}
+          onChange={handleInputChange}
         />
-      </div>
-      <div className="button-section">
-        <button
-          type="submit"
-          className={formValid ? "button" : "disabled-button"}
-          disabled={!formValid}
-        >
-          Show more
-        </button>
-      </div>
-    </form>
+        <input
+          placeholder="Email"
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleInputChange}
+        />
+        <input
+          placeholder="Phone"
+          type="text"
+          name="phone"
+          value={formData.phone}
+          onChange={handleInputChange}
+        />
+        <div className="position-select">
+          <label className="radio-title">Select your position</label>
+
+          {positions.map((pos, index) => (
+            <div key={index} className="radio-group">
+              <input
+                id={pos.id}
+                type="radio"
+                name="position"
+                value={pos.id}
+                onChange={handleInputChange}
+              />
+              <label htmlFor={pos.id}>{pos.name}</label>
+            </div>
+          ))}
+        </div>
+        <div>
+          <label htmlFor="file-upload" className="custom-file-upload">
+            Upload
+          </label>
+          <input
+            id="file-upload"
+            type="file"
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+          />
+          <input
+            type="text"
+            readOnly
+            value={selectedFile ? selectedFile.name : ""}
+            placeholder="Upload your photo"
+            className="input-file"
+          />
+        </div>
+        <div className="button-section">
+          <button
+            type="submit"
+            className={formValid ? "button" : "disabled-button"}
+            disabled={!formValid}
+          >
+            Show more
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 
