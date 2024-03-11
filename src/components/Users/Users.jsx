@@ -11,28 +11,28 @@ const Users = () => {
   const userUpdated = useContext(UserUpdateContext);
 
   useEffect(() => {
+    const fetchUsers = () => {
+      fetch(
+        `https://frontend-test-assignment-api.abz.agency/api/v1/users?page=${page}&count=6`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            if (data.users.length < 6) {
+              setHasMore(false);
+            }
+            setUsers(data.users);
+          } else {
+            console.error("Server error:", data.message);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    };
+
     fetchUsers();
   }, [page, userUpdated]);
-
-  const fetchUsers = () => {
-    fetch(
-      `https://frontend-test-assignment-api.abz.agency/api/v1/users?page=${page}&count=6`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          if (data.users.length < 6) {
-            setHasMore(false);
-          }
-          setUsers(data.users);
-        } else {
-          console.error("Server error:", data.message);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  };
 
   const handleShowMore = () => {
     setPage(page + 1);

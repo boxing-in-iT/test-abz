@@ -6,7 +6,7 @@ const UserCard = ({ user }) => {
   return (
     <div className="card-wrapper">
       <div className="card">
-        <img src={photo} />
+        <img src={photo} alt={name} />
         <p>{name}</p>
         <p>{position}</p>
         <p>{email}</p>

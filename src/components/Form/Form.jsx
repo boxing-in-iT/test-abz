@@ -17,14 +17,13 @@ const Form = () => {
   const [serverError, setServerError] = useState(null);
 
   const { userUpdated, setUserUpdated } = useContext(UserUpdateContext);
-  // console.log(handleUserUpdate);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     let errorMessage = "";
 
     if (name === "phone") {
-      const phonePattern = /^[\+]{0,1}380([0-9]{9})$/;
+      const phonePattern = /^\+?380([0-9]{9})$/;
       if (!phonePattern.test(value)) {
         errorMessage =
           "Phone number must start with +380 and contain 9 digits.";
@@ -48,6 +47,21 @@ const Form = () => {
   };
 
   useEffect(() => {
+    const validateForm = () => {
+      const { name, email, phone, position, file } = formData;
+      if (
+        name.trim() !== "" &&
+        email.trim() !== "" &&
+        phone.trim() !== "" &&
+        position !== "" &&
+        file
+      ) {
+        setFormValid(true);
+      } else {
+        setFormValid(false);
+      }
+    };
+
     validateForm();
   }, [formData]);
 
@@ -78,27 +92,11 @@ const Form = () => {
       });
   };
 
-  const validateForm = () => {
-    const { name, email, phone, position, file } = formData;
-    if (
-      name.trim() !== "" &&
-      email.trim() !== "" &&
-      phone.trim() !== "" &&
-      position !== "" &&
-      file
-    ) {
-      setFormValid(true);
-    } else {
-      setFormValid(false);
-    }
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     setServerError(null);
 
     if (token) {
-      // debugger;
       const formDataToSend = new FormData();
       formDataToSend.append("name", formData.name);
       formDataToSend.append("email", formData.email);
@@ -114,7 +112,7 @@ const Form = () => {
         },
       })
         .then((response) => {
-          console.log("Response status:", response.status); // Логирование статуса ответа
+          console.log("Response status:", response.status);
           return response.json();
         })
         .then((data) => {
@@ -129,7 +127,6 @@ const Form = () => {
             });
             setSelectedFile(null);
             setFormValid(false);
-            // handleUserUpdate();
             setUserUpdated(!userUpdated);
           } else {
             setServerError(data.message);
