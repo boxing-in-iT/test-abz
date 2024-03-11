@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./index.scss";
+import { UserUpdateContext } from "../../App";
 
 const Form = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -11,6 +12,12 @@ const Form = () => {
     file: null,
   });
   const [formValid, setFormValid] = useState(false);
+  const [positions, setPositions] = useState([]);
+  const [token, setToken] = useState(null);
+  const [serverError, setServerError] = useState(null);
+
+  const { userUpdated, setUserUpdated } = useContext(UserUpdateContext);
+  // console.log(handleUserUpdate);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -18,6 +25,7 @@ const Form = () => {
       ...formData,
       [name]: value,
     });
+    setServerError(null);
   };
 
   const handleFileChange = (event) => {
@@ -31,6 +39,33 @@ const Form = () => {
   useEffect(() => {
     validateForm();
   }, [formData]);
+
+  useEffect(() => {
+    fetchPositions();
+    fetchToken();
+  }, []);
+
+  const fetchToken = () => {
+    fetch("https://frontend-test-assignment-api.abz.agency/api/v1/token")
+      .then((response) => response.json())
+      .then((data) => {
+        setToken(data.token);
+      })
+      .catch((error) => {
+        console.log("Error fetching token: ", error);
+      });
+  };
+
+  const fetchPositions = () => {
+    fetch("https://frontend-test-assignment-api.abz.agency/api/v1/positions")
+      .then((response) => response.json())
+      .then((data) => {
+        setPositions(data.positions);
+      })
+      .catch((error) => {
+        console.log("Error fetching positions: ", error);
+      });
+  };
 
   const validateForm = () => {
     const { name, email, phone, position, file } = formData;
@@ -47,13 +82,61 @@ const Form = () => {
     }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Handle form submission logic here
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setServerError(null);
+
+    if (token) {
+      // debugger;
+      const formDataToSend = new FormData();
+      formDataToSend.append("name", formData.name);
+      formDataToSend.append("email", formData.email);
+      formDataToSend.append("phone", formData.phone);
+      formDataToSend.append("position_id", formData.position);
+      formDataToSend.append("photo", selectedFile);
+
+      fetch("https://frontend-test-assignment-api.abz.agency/api/v1/users", {
+        method: "POST",
+        body: formDataToSend,
+        headers: {
+          Token: token,
+        },
+      })
+        .then((response) => {
+          console.log("Response status:", response.status); // Логирование статуса ответа
+          return response.json();
+        })
+        .then((data) => {
+          console.log("Response data:", data);
+          if (data.success) {
+            setFormData({
+              name: "",
+              email: "",
+              phone: "",
+              position: "",
+              file: null,
+            });
+            setSelectedFile(null);
+            setFormValid(false);
+            // handleUserUpdate();
+            setUserUpdated(!userUpdated);
+          } else {
+            setServerError(data.message);
+          }
+        })
+        .catch((error) => {
+          console.log("Network error:", error);
+          setServerError("Network error occurred. Please try again later.");
+        });
+    } else {
+      console.log("Token not available yet.");
+    }
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      {serverError && <div className="server-error">{serverError}</div>}
+
       <input
         placeholder="Your name"
         type="text"
@@ -78,46 +161,18 @@ const Form = () => {
       <div className="position-select">
         <label className="radio-title">Select your position</label>
 
-        <div className="radio-group">
-          <input
-            id="frontend"
-            type="radio"
-            name="position"
-            value="frontend"
-            onChange={handleInputChange}
-          />
-          <label htmlFor="frontend">Frontend developer</label>
-        </div>
-        <div className="radio-group">
-          <input
-            id="backend"
-            type="radio"
-            name="position"
-            value="backend"
-            onChange={handleInputChange}
-          />
-          <label htmlFor="backend">Backend developer</label>
-        </div>
-        <div className="radio-group">
-          <input
-            id="designer"
-            type="radio"
-            name="position"
-            value="designer"
-            onChange={handleInputChange}
-          />
-          <label htmlFor="designer">Designer</label>
-        </div>
-        <div className="radio-group">
-          <input
-            id="qa"
-            type="radio"
-            name="position"
-            value="qa"
-            onChange={handleInputChange}
-          />
-          <label htmlFor="qa">QA</label>
-        </div>
+        {positions.map((pos, index) => (
+          <div key={index} className="radio-group">
+            <input
+              id={pos.id}
+              type="radio"
+              name="position"
+              value={pos.id}
+              onChange={handleInputChange}
+            />
+            <label htmlFor={pos.id}>{pos.name}</label>
+          </div>
+        ))}
       </div>
       <div>
         <label htmlFor="file-upload" className="custom-file-upload">
@@ -139,6 +194,7 @@ const Form = () => {
       </div>
       <div className="button-section">
         <button
+          type="submit"
           className={formValid ? "button" : "disabled-button"}
           disabled={!formValid}
         >
