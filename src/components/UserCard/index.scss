@@ -1,10 +1,12 @@
 .card-wrapper {
-  // width: 300px; /* Задайте фиксированную ширину карточки */
   width: 30rem;
   background-color: #ffffff;
   border-radius: 15px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 50px; /* Добавляем немного отступа между карточками */
+  margin-bottom: 50px;
+  @media screen and (max-width: 64rem) {
+    width: 20rem;
+  }
 }
 
 .card {
