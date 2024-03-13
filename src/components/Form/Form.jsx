@@ -16,7 +16,7 @@ const Form = () => {
   const [token, setToken] = useState(null);
   const [serverError, setServerError] = useState(null);
 
-  const { userUpdated, setUserUpdated } = useContext(UserUpdateContext);
+  const { setUserUpdated } = useContext(UserUpdateContext);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -127,7 +127,7 @@ const Form = () => {
             });
             setSelectedFile(null);
             setFormValid(false);
-            setUserUpdated(!userUpdated);
+            setUserUpdated((prevState) => !prevState);
           } else {
             setServerError(data.message);
           }

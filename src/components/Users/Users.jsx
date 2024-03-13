@@ -8,31 +8,43 @@ const Users = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
-  const userUpdated = useContext(UserUpdateContext);
+  const { userUpdated } = useContext(UserUpdateContext);
 
-  useEffect(() => {
-    const fetchUsers = () => {
-      fetch(
-        `https://frontend-test-assignment-api.abz.agency/api/v1/users?page=${page}&count=6`
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            if (data.users.length < 6) {
-              setHasMore(false);
-            }
+  console.log("USERUPFA: ", userUpdated);
+
+  const fetchUsers = () => {
+    fetch(
+      `https://frontend-test-assignment-api.abz.agency/api/v1/users?page=${page}&count=6`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          if (data.users.length < 6) {
+            setHasMore(false);
+          }
+          // Если это первая страница, очищаем пользователей
+          if (page === 1) {
             setUsers(data.users);
           } else {
-            console.error("Server error:", data.message);
+            setUsers((prevUsers) => [...prevUsers, ...data.users]);
           }
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-        });
-    };
+        } else {
+          console.error("Server error:", data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
 
+  useEffect(() => {
+    setPage(1);
     fetchUsers();
-  }, [page, userUpdated]);
+  }, [userUpdated]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [page]);
 
   const handleShowMore = () => {
     setPage(page + 1);

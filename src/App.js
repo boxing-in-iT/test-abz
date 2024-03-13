@@ -12,7 +12,9 @@ function App() {
   const [userUpdated, setUserUpdated] = useState(false);
 
   return (
-    <UserUpdateContext.Provider value={{ userUpdated, setUserUpdated }}>
+    <UserUpdateContext.Provider
+      value={{ userUpdated: userUpdated, setUserUpdated: setUserUpdated }}
+    >
       <Header />
       <Welcome />
       <Users />
