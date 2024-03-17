@@ -8,12 +8,14 @@ export const fetchUsers = (page, setUsers, setPage, setHasMore) => {
         if (data.users.length < 6) {
           setHasMore(false);
         }
-        // Если это первая страница, очищаем пользователей
         if (page === 1) {
+          // Если это первая страница, просто устанавливаем новый список пользователей
           setUsers(data.users);
         } else {
+          // Если это не первая страница, добавляем новых пользователей к текущему списку
           setUsers((prevUsers) => [...prevUsers, ...data.users]);
         }
+        setPage(page + 1); // Увеличиваем номер страницы для следующего запроса
       } else {
         console.error("Server error:", data.message);
       }
